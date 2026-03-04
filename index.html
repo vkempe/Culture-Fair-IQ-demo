@@ -16,8 +16,6 @@
         }
         .screen { display: none; flex-direction: column; gap: 16px; }
         .screen.active { display: flex; }
-
-        /* Welcome */
         .welcome { text-align: center; padding-top: 40px; gap: 24px; }
         .welcome h1 { font-size: 24px; font-weight: 700; }
         .welcome p { font-size: 14px; color: #444; }
@@ -25,13 +23,9 @@
             background: #f5f5f5; border: 1px solid #ddd; border-radius: 6px;
             padding: 16px; font-size: 13px; color: #555; text-align: left;
         }
-
-        /* Instructions between subtests */
         .instructions { padding-top: 20px; gap: 20px; }
         .instructions h2 { font-size: 20px; }
         .instructions p { font-size: 14px; color: #333; }
-
-        /* Item display */
         .item-screen { gap: 12px; }
         .progress-bar {
             display: flex; justify-content: space-between; align-items: center;
@@ -44,12 +38,9 @@
         .progress-fill {
             height: 100%; background: black; border-radius: 2px; transition: width 0.3s;
         }
-        .item-image {
-            width: 100%; border-radius: 4px;
-        }
+        .item-image { width: 100%; border-radius: 4px; }
         .answer-buttons {
-            display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
-            padding: 8px 0;
+            display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; padding: 8px 0;
         }
         .answer-btn {
             width: 52px; height: 52px; font-size: 18px; font-weight: 700;
@@ -58,30 +49,21 @@
             touch-action: manipulation; text-transform: lowercase;
         }
         .answer-btn:active { transform: scale(0.95); }
-        .answer-btn.selected {
-            background: black; color: white;
-        }
+        .answer-btn.selected { background: black; color: white; }
         .answer-btn:hover { background: #f0f0f0; }
         .answer-btn.selected:hover { background: #333; }
-        .clf-hint {
-            text-align: center; font-size: 13px; color: #888;
-        }
+        .clf-hint { text-align: center; font-size: 13px; color: #888; }
         .skip-btn {
             background: none; border: none; color: #aaa; font-size: 13px;
             cursor: pointer; padding: 8px; text-decoration: underline;
         }
-
-        /* Results */
         .results { text-align: center; padding-top: 30px; gap: 20px; }
         .score-big { font-size: 64px; font-weight: 700; }
         .score-label { font-size: 16px; color: #666; }
         .subtest-scores {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-            text-align: center;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: center;
         }
-        .subtest-card {
-            border: 1px solid #ddd; border-radius: 8px; padding: 16px;
-        }
+        .subtest-card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; }
         .subtest-card .name { font-size: 12px; color: #888; text-transform: uppercase; font-weight: 600; }
         .subtest-card .score { font-size: 28px; font-weight: 700; margin-top: 4px; }
         .btn {
@@ -100,8 +82,6 @@
 </head>
 <body>
     <div class="container">
-
-        <!-- WELCOME SCREEN -->
         <div class="screen welcome active" id="welcomeScreen">
             <h1>Pattern Reasoning Demo</h1>
             <p>A short demonstration of nonverbal reasoning tasks</p>
@@ -115,15 +95,11 @@
                 This demo does not collect, store, or transmit any data.
             </div>
         </div>
-
-        <!-- INSTRUCTIONS SCREEN (between subtests) -->
         <div class="screen instructions" id="instrScreen">
             <h2 id="instrTitle"></h2>
             <p id="instrText"></p>
             <button class="btn btn-primary" onclick="startSubtest()">Start</button>
         </div>
-
-        <!-- ITEM SCREEN -->
         <div class="screen item-screen" id="itemScreen">
             <div class="progress-bar">
                 <span id="subtestLabel"></span>
@@ -139,8 +115,6 @@
                 <button class="skip-btn" onclick="skipItem()">skip →</button>
             </div>
         </div>
-
-        <!-- RESULTS SCREEN -->
         <div class="screen results" id="resultsScreen">
             <div>
                 <div class="score-big" id="totalScore"></div>
@@ -153,201 +127,105 @@
             </div>
         </div>
     </div>
-
     <script>
-        // ── ITEM DEFINITIONS ──
-        // Each item: { image, options (letters), answer, subtest }
-        // For classification (test2): answer is an array of 2 letters
         const items = [
-            // Test 1: Series Completion (pick 1 of a–f)
             { image: 'test1item3.png',  options: ['a','b','c','d','e','f'], answer: 'b', subtest: 0 },
             { image: 'test1item6.png',  options: ['a','b','c','d','e','f'], answer: 'b', subtest: 0 },
             { image: 'test1item9.png',  options: ['a','b','c','d','e','f'], answer: 'f', subtest: 0 },
             { image: 'test1item12.png', options: ['a','b','c','d','e','f'], answer: 'b', subtest: 0 },
-
-            // Test 2: Classification (pick 2 of a–e)
             { image: 'test2item4.png',  options: ['a','b','c','d','e'], answer: ['c','e'], subtest: 1 },
             { image: 'test2item7.png',  options: ['a','b','c','d','e'], answer: ['b','e'], subtest: 1 },
             { image: 'test2item10.png', options: ['a','b','c','d','e'], answer: ['b','d'], subtest: 1 },
             { image: 'test2item14.png', options: ['a','b','c','d','e'], answer: ['a','b'], subtest: 1 },
-
-            // Test 3: Matrices (pick 1 of a–f)
             { image: 'test3item4.png',  options: ['a','b','c','d','e','f'], answer: 'b', subtest: 2 },
             { image: 'test3item7.png',  options: ['a','b','c','d','e','f'], answer: 'e', subtest: 2 },
             { image: 'test3item10.png', options: ['a','b','c','d','e','f'], answer: 'a', subtest: 2 },
             { image: 'test3item13.png', options: ['a','b','c','d','e','f'], answer: 'c', subtest: 2 },
-
-            // Test 4: Conditions (pick 1 of a–e)
             { image: 'test4item1.png',  options: ['a','b','c','d','e'], answer: 'b', subtest: 3 },
             { image: 'test4item4.png',  options: ['a','b','c','d','e'], answer: 'd', subtest: 3 },
             { image: 'test4item7.png',  options: ['a','b','c','d','e'], answer: 'c', subtest: 3 },
             { image: 'test4item10.png', options: ['a','b','c','d','e'], answer: 'd', subtest: 3 },
         ];
-
         const subtestInfo = [
-            {
-                name: 'Series Completion',
-                instruction: 'You will see a sequence of figures that follow a pattern. The last figure is missing. Choose which of the options (a–f) completes the sequence.'
-            },
-            {
-                name: 'Classification',
-                instruction: 'You will see 5 figures. Three of them share something in common. Choose the <strong>2 figures</strong> that are different from the other three. Tap two letters.'
-            },
-            {
-                name: 'Matrices',
-                instruction: 'You will see a grid of figures with one cell missing. Choose which option (a–f) correctly completes the pattern across rows and columns.'
-            },
-            {
-                name: 'Conditions',
-                instruction: 'You will see a reference figure showing a spatial relationship (e.g., inside, outside, overlapping). Choose the option (a–e) that preserves the same relationship using different shapes.'
-            }
+            { name: 'Series Completion', instruction: 'You will see a sequence of figures that follow a pattern. The last figure is missing. Choose which of the options (a\u2013f) completes the sequence.' },
+            { name: 'Classification', instruction: 'You will see 5 figures. Three of them share something in common. Choose the <strong>2 figures</strong> that are different from the other three. Tap two letters.' },
+            { name: 'Matrices', instruction: 'You will see a grid of figures with one cell missing. Choose which option (a\u2013f) correctly completes the pattern across rows and columns.' },
+            { name: 'Conditions', instruction: 'You will see a reference figure showing a spatial relationship (e.g., inside, outside, overlapping). Choose the option (a\u2013e) that preserves the same relationship using different shapes.' }
         ];
-
-        // ── STATE ──
         let currentItem = 0;
-        let scores = [0, 0, 0, 0]; // per subtest
-        let clfSelections = [];     // for classification items
+        let scores = [0, 0, 0, 0];
+        let clfSelections = [];
         let lastSubtest = -1;
-
-        // ── NAVIGATION ──
-        function hideAll() {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        }
-        function show(id) {
-            hideAll();
-            document.getElementById(id).classList.add('active');
-        }
-
-        function startQuiz() {
-            currentItem = 0;
-            scores = [0, 0, 0, 0];
-            lastSubtest = -1;
-            showNextItem();
-        }
-
+        function hideAll() { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); }
+        function show(id) { hideAll(); document.getElementById(id).classList.add('active'); }
+        function startQuiz() { currentItem = 0; scores = [0,0,0,0]; lastSubtest = -1; showNextItem(); }
         function showNextItem() {
-            if (currentItem >= items.length) {
-                showResults();
-                return;
-            }
+            if (currentItem >= items.length) { showResults(); return; }
             const item = items[currentItem];
-
-            // If entering a new subtest, show instructions first
             if (item.subtest !== lastSubtest) {
                 lastSubtest = item.subtest;
                 const info = subtestInfo[item.subtest];
-                document.getElementById('instrTitle').textContent = 'Test ' + (item.subtest + 1) + ': ' + info.name;
+                document.getElementById('instrTitle').textContent = 'Test ' + (item.subtest+1) + ': ' + info.name;
                 document.getElementById('instrText').innerHTML = info.instruction;
-                show('instrScreen');
-                return;
+                show('instrScreen'); return;
             }
-
             displayItem();
         }
-
-        function startSubtest() {
-            displayItem();
-        }
-
+        function startSubtest() { displayItem(); }
         function displayItem() {
             const item = items[currentItem];
             const info = subtestInfo[item.subtest];
-
-            // Progress
             const subtestItems = items.filter(i => i.subtest === item.subtest);
             const indexInSubtest = subtestItems.indexOf(item);
             document.getElementById('subtestLabel').textContent = info.name;
-            document.getElementById('itemCounter').textContent = (indexInSubtest + 1) + '/' + subtestItems.length;
-            const totalProgress = ((currentItem) / items.length) * 100;
-            document.getElementById('progressFill').style.width = totalProgress + '%';
-
-            // Image
+            document.getElementById('itemCounter').textContent = (indexInSubtest+1) + '/' + subtestItems.length;
+            document.getElementById('progressFill').style.width = ((currentItem)/items.length)*100 + '%';
             document.getElementById('itemImage').src = item.image;
-
-            // Classification hint
             const isClf = Array.isArray(item.answer);
             const hint = document.getElementById('clfHint');
             hint.style.display = isClf ? 'block' : 'none';
-            if (isClf) {
-                clfSelections = [];
-                document.getElementById('clfCount').textContent = '0';
-            }
-
-            // Buttons
+            if (isClf) { clfSelections = []; document.getElementById('clfCount').textContent = '0'; }
             const btnContainer = document.getElementById('answerButtons');
             btnContainer.innerHTML = '';
             item.options.forEach(letter => {
                 const btn = document.createElement('button');
-                btn.className = 'answer-btn';
-                btn.textContent = letter;
+                btn.className = 'answer-btn'; btn.textContent = letter;
                 btn.onclick = () => handleAnswer(letter, btn);
                 btnContainer.appendChild(btn);
             });
-
             show('itemScreen');
         }
-
         function handleAnswer(letter, btn) {
             const item = items[currentItem];
             const isClf = Array.isArray(item.answer);
-
             if (isClf) {
-                // Toggle selection for classification
                 const idx = clfSelections.indexOf(letter);
-                if (idx >= 0) {
-                    clfSelections.splice(idx, 1);
-                    btn.classList.remove('selected');
-                } else {
-                    if (clfSelections.length >= 2) return; // already have 2
-                    clfSelections.push(letter);
-                    btn.classList.add('selected');
-                }
+                if (idx >= 0) { clfSelections.splice(idx,1); btn.classList.remove('selected'); }
+                else { if (clfSelections.length >= 2) return; clfSelections.push(letter); btn.classList.add('selected'); }
                 document.getElementById('clfCount').textContent = clfSelections.length;
-
-                // Auto-advance when 2 selected
                 if (clfSelections.length === 2) {
                     const sorted = [...clfSelections].sort();
                     const answerSorted = [...item.answer].sort();
-                    const correct = sorted[0] === answerSorted[0] && sorted[1] === answerSorted[1];
-                    if (correct) scores[item.subtest]++;
+                    if (sorted[0]===answerSorted[0] && sorted[1]===answerSorted[1]) scores[item.subtest]++;
                     setTimeout(() => { currentItem++; showNextItem(); }, 400);
                 }
             } else {
-                // Single selection — highlight and advance
                 btn.classList.add('selected');
                 if (letter === item.answer) scores[item.subtest]++;
                 setTimeout(() => { currentItem++; showNextItem(); }, 300);
             }
         }
-
-        function skipItem() {
-            currentItem++;
-            showNextItem();
-        }
-
+        function skipItem() { currentItem++; showNextItem(); }
         function showResults() {
-            const total = scores.reduce((a, b) => a + b, 0);
+            const total = scores.reduce((a,b) => a+b, 0);
             document.getElementById('totalScore').textContent = total;
-
-            const names = ['Series', 'Classification', 'Matrices', 'Conditions'];
-            const maxes = [4, 4, 4, 4];
+            const names = ['Series','Classification','Matrices','Conditions'];
             let html = '';
-            names.forEach((name, i) => {
-                html += `<div class="subtest-card">
-                    <div class="name">${name}</div>
-                    <div class="score">${scores[i]}/${maxes[i]}</div>
-                </div>`;
-            });
+            names.forEach((name,i) => { html += '<div class="subtest-card"><div class="name">'+name+'</div><div class="score">'+scores[i]+'/4</div></div>'; });
             document.getElementById('subtestScores').innerHTML = html;
             show('resultsScreen');
         }
-
-        function resetQuiz() {
-            currentItem = 0;
-            scores = [0, 0, 0, 0];
-            lastSubtest = -1;
-            show('welcomeScreen');
-        }
+        function resetQuiz() { currentItem=0; scores=[0,0,0,0]; lastSubtest=-1; show('welcomeScreen'); }
     </script>
 </body>
 </html>
